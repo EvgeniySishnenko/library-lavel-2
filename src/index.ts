@@ -1,6 +1,8 @@
 import "reflect-metadata";
-import { injectable, Container } from "inversify";
+import { injectable } from "inversify";
 import { Request, Response, Router } from "express";
+import { container } from "./container";
+
 const router = Router();
 
 interface Book {
@@ -22,16 +24,13 @@ interface IBooksRepository {
 }
 
 @injectable()
-class BooksRepository {
+export class BooksRepository {
   createBook(book: Omit<Book, "id">) {}
   getBook(id: string) {}
   getBooks() {}
   updateBook(id: string) {}
   deleteBook(id: string) {}
 }
-
-const container = new Container();
-container.bind(BooksRepository).toSelf();
 
 router.get(":id", async (req: Request, res: Response) => {
   const repo = container.get(BooksRepository);

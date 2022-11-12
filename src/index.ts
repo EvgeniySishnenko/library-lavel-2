@@ -17,23 +17,25 @@ interface Book {
 
 interface IBooksRepository {
   createBook(book: Omit<Book, "id">): void;
-  getBook(id: string): void;
+  getBook(id: string): Book;
   getBooks(): void;
   updateBook(id: string): void;
   deleteBook(id: string): void;
 }
 
 @injectable()
-export class BooksRepository {
+export class BooksRepository implements IBooksRepository {
   createBook(book: Omit<Book, "id">) {}
-  getBook(id: string) {}
+  getBook(id: string) {
+    return {} as Book;
+  }
   getBooks() {}
   updateBook(id: string) {}
   deleteBook(id: string) {}
 }
 
 router.get(":id", async (req: Request, res: Response) => {
-  const repo = container.get(BooksRepository);
-  const book = await repo.getBook(req.params.id);
+  const repo: IBooksRepository = container.get(BooksRepository);
+  const book: Book = await repo.getBook(req.params.id);
   res.json(book);
 });
